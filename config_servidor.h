@@ -2,6 +2,8 @@
 #define CONFIG_SERVIDOR_H
 
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 typedef struct
 {
@@ -11,5 +13,6 @@ typedef struct
 } ConfiguracaoServidor;
 
 ConfiguracaoServidor configuracaoTcpIpv4(void); 
+struct sockaddr_in ConfigurandoEnderecoIpv4(uint16_t);
 
 #endif
