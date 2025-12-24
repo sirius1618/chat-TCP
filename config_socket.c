@@ -49,14 +49,14 @@ void  escutarSocket(int descritorSock, int maxConexoa) {
 }
 
 int conecatarCliente(int descritorSock, struct sockaddr_in endereco) {
-    int descSockTemp = accept(descritorSock, (struct sockaddr*) &endereco, sizeof(endereco));
+    int descSockTemp = accept(descritorSock, (struct sockaddr*) &endereco, &endereco);
 
     if (descSockTemp < 0) {
         perror("Erro ao conectar cliente");
         return -1;
     }
 
-    return 0; 
+    return descSockTemp; 
 }
 
 int lerDadosCliente(int descSock, char *dados, size_t tamDados) {
