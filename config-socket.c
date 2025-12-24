@@ -1,9 +1,7 @@
 
 #include <sys/socket.h> 
 #include <stdlib.h>
-
-// TODO ver a diferença entre as duas bibliotecas de manipulação de rede:
-// #include <arpa/inet.h>
+#include <string.h>
 #include <netinet/in.h>
 
 #include "config_servidor.h"
