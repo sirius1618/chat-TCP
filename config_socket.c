@@ -6,8 +6,8 @@
 
 #include "config_servidor.h"
 
-int criarSockted(int descritoSock, ConfiguracaoServidor config) {
-    descritoSock = socket(config.rede, config.tipoComunicacao, config.protocolo); 
+int criarSockted(ConfiguracaoServidor config) {
+   int descritoSock = socket(config.rede, config.tipoComunicacao, config.protocolo); 
 
     if (descritoSock < 0) {
         perror("Erro ao criar socket!");
