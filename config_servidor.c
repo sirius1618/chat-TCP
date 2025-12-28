@@ -2,6 +2,8 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include "config_servidor.h"
+
 typedef struct 
 {
     int rede;

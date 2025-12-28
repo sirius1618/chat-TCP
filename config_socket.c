@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 
 #include "config_servidor.h"
+#include "confing_socket.h"
 
 int criarSockted(ConfiguracaoServidor config) {
    int descritoSock = socket(config.rede, config.tipoComunicacao, config.protocolo); 
