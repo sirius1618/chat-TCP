@@ -1,5 +1,6 @@
 #include "config_servidor.h"
 #include "confing_socket.h"
+#include "inicialzando_server.h"
 
 #define PORTA 8080 
 
