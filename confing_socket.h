@@ -4,13 +4,13 @@
 #include "config_servidor.h"
 #include <netinet/in.h>
 
-int criarSockted(int , ConfiguracaoServidor);
+int criarSockted(ConfiguracaoServidor);
 
 int configFechamentoPortSock(int ,int);
 
 int associarIpAoSocket(int, struct sockaddr_in);
 
-void  escutarSocket(int, int);
+void escutarSocket(int, int);
 
 int conecatarCliente(int, struct sockaddr_in);
 

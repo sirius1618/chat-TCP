@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netinet/in.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #include "config_servidor.h"
 #include "confing_socket.h"
@@ -50,7 +52,8 @@ void  escutarSocket(int descritorSock, int maxConexoa) {
 }
 
 int conecatarCliente(int descritorSock, struct sockaddr_in endereco) {
-    int descSockTemp = accept(descritorSock, (struct sockaddr*) &endereco, &endereco);
+    socklen_t tamanho = sizeof(endereco);
+    int descSockTemp = accept(descritorSock, (struct sockaddr*) &endereco, &tamanho);
 
     if (descSockTemp < 0) {
         perror("Erro ao conectar cliente");
