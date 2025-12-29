@@ -5,7 +5,8 @@
 #include "config_servidor.h"
 
 #define PORTA 8080
+#define BUFFER_SIZE 1024
 
-int inicializandoServer(int descritorSock);
+void inicializandoServer(void);
 
 #endif

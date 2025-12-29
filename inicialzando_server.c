@@ -3,20 +3,20 @@
 #include "inicialzando_server.h"
 
 #define PORTA 8080 
+#define BUFFER_SIZE 1024
 
-int inicializandoServer(int descritorSock) {
+void inicializandoServer() {
 
     int ativOpcao = 1;
     int maxConex = 2;
-    ConfiguracaoServidor configRede;  
+    ConfiguracaoServidor configRede = configuracaoTcpIpv4();  
     struct sockaddr_in endereco = ConfigurandoEnderecoIpv4(PORTA);
     
     // TODO(mudar): Esses dados virão do host cliente:
-    size_t tamanho = 1024;
-    char dados[tamanho] = {0};
+    char dados[BUFFER_SIZE] = {0};
     char* resposta = "teste servidor";
 
-    int descritorSock = descriarSockted(configRede); 
+    int descritorSock = criarSockted(configRede); 
 
     configFechamentoPortSock(descritorSock, ativOpcao);
 
@@ -26,7 +26,7 @@ int inicializandoServer(int descritorSock) {
 
     int descritorCliente = conecatarCliente(descritorSock, endereco); 
 
-    lerDadosCliente(descritorCliente, dados, tamanho);
+    lerDadosCliente(descritorCliente, dados, BUFFER_SIZE);
 
     requestSocket(descritorCliente, resposta); 
 
