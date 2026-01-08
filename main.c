@@ -2,6 +2,6 @@
 
 
 int main(void) {
-    inicializandoServer();
+    initServidor(8080, 2);
     return 0;
 }

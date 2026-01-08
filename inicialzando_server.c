@@ -2,36 +2,44 @@
 #include "confing_socket.h"
 #include "inicialzando_server.h"
 
-#define PORTA 8080 
-#define BUFFER_SIZE 1024
+#include <stdio.h>
+#include <stdlib.h>
 
-void inicializandoServer() {
+#define BUFFER_SIZE 1024 
 
-    int ativOpcao = 1;
-    int maxConex = 2;
+int setupServidor(int porta, int maxConex, struct sockaddr_in *endereco) {
+
+    int ativOpcao = 1; // 1 = sim , 0 = não
     ConfiguracaoServidor configRede = configuracaoTcpIpv4();  
-    struct sockaddr_in endereco = ConfigurandoEnderecoIpv4(PORTA);
-    
-    // TODO(mudar): Esses dados virão do host cliente:
-    char dados[BUFFER_SIZE] = {0};
-    char* resposta = "teste servidor";
-
+    endereco = ConfigurandoEnderecoIpv4(porta);
     int descritorSock = criarSockted(configRede); 
 
     configFechamentoPortSock(descritorSock, ativOpcao);
-
-    associarIpAoSocket(descritorSock, endereco);
-
-    escutarSocket(descritorSock, maxConex);
-
-    int descritorCliente = conecatarCliente(descritorSock, endereco); 
-
-    lerDadosCliente(descritorCliente, dados, BUFFER_SIZE);
-
-    requestSocket(descritorCliente, resposta); 
-
-    fecharSocket(descritorCliente); 
-    fecharSocket(descritorSock); 
-
+    associarIpAoSocket(descritorSock, *endereco);
+    
+    return descritorSock;
 }
 
+void loopConecao(int descritorCliente) {
+    char dadosCliente[BUFFER_SIZE] = {0};
+    char *response = "Conexão com o servidor encerrada";
+
+    while (dadosCliente != "!q"){ 
+        lerDadosCliente(descritorCliente, dadosCliente, BUFFER_SIZE);
+        printf("%s", dadosCliente);
+    }
+
+    requestSocket(descritorCliente, response); 
+    fecharSocket(descritorCliente); 
+}
+
+void initServidor(int porta, int maxConex) {
+    struct sockaddr_in *endereco;
+    int descritorSock = setupServidor(porta, maxConex, endereco);
+    escutarSocket(descritorSock, maxConex);
+    int descritorCliente = conecatarCliente(descritorSock, *endereco); 
+
+    loopConecao(descritorCliente);
+
+    fecharSocket(descritorSock); 
+}
