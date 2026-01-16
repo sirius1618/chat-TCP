@@ -20,6 +20,7 @@ int criarSockted(ConfiguracaoServidor config) {
     return descritoSock; 
 }
 
+// TODO: posso deixar como void
 int configFechamentoPortSock(int descritorSock, int opt) {
     int confPort = setsockopt(descritorSock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
     

@@ -14,6 +14,6 @@ typedef struct
 } ConfiguracaoServidor;
 
 ConfiguracaoServidor configuracaoTcpIpv4(void); 
-struct sockaddr_in* ConfigurandoEnderecoIpv4(uint16_t);
+struct sockaddr_in ConfigurandoEnderecoIpv4(uint16_t);
 
 #endif
