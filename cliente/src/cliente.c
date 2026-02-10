@@ -65,18 +65,18 @@ void receber_resposta(int descritor_sock) {
     printf("%s", buffer);
 }
 
-int identificar_escrita(int sock_descritor) {
+int identificar_escrita(int descritor_monitorar) {
     fd_set fila_descritores;
 
     struct timeval tm;
-    tm.tv_sec = 1;
-    tm.tv_usec = 0;
+    tm.tv_sec = 0;
+    tm.tv_usec = 1000;
 
     FD_ZERO(&fila_descritores);
 
-    FD_SET(sock_descritor, &fila_descritores);
+    FD_SET(descritor_monitorar, &fila_descritores);
 
-    int monitorando  = select(sock_descritor + 1, &fila_descritores, NULL, NULL, &tm);
+    int monitorando  = select(descritor_monitorar + 1, &fila_descritores, NULL, NULL, &tm);
 
     return (monitorando > 0); 
 
@@ -94,8 +94,10 @@ int main() {
     int contador = 0; 
     while (1)
     {
-        scanf("%49s", &mensagem);
-        envio_mensagem(descrito_sock, mensagem);
+        if (identificar_escrita(0) > 0) {
+            fgets(mensagem, sizeof(mensagem), stdin);
+            envio_mensagem(descrito_sock, mensagem);
+        }
 
         if (identificar_escrita(descrito_sock) > 0) {
             receber_resposta(descrito_sock); 
