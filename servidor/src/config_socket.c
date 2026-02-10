@@ -69,7 +69,13 @@ int lerDadosCliente(int descSock, char *dados, size_t tamDados) {
 }
 
 int requestSocket(int descSock, char *resposta) {
-    return send(descSock, resposta, strlen(resposta), 0); 
+    int dados_enviados = send(descSock, resposta, strlen(resposta), 0); 
+
+    if (dados_enviados < 0) {
+        perror("Erro ao mandar dados\n");
+        exit(EXIT_FAILURE);
+    }
+    return dados_enviados;
 }
 
 void fecharSocket(int descSock) {
