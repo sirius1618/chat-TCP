@@ -23,17 +23,17 @@ int setupServidor(int porta, struct sockaddr_in *endereco) {
     return descritorSock;
 }
 
-int identificar_escrita() {
+int identificar_escrita(int descritor) {
     fd_set fila_descritores;
     FD_ZERO(&fila_descritores);
 
     struct timeval tm;
-    tm.tv_sec = 1;
-    tm.tv_usec = 0;
+    tm.tv_sec = 0;
+    tm.tv_usec = 1000;
 
-    FD_SET(STDIN_FILENO, &fila_descritores);
+    FD_SET(descritor, &fila_descritores);
 
-    int monitorando  = select(STDIN_FILENO + 1, &fila_descritores, NULL, NULL, &tm);
+    int monitorando  = select(descritor + 1, &fila_descritores, NULL, NULL, &tm);
 
     return (monitorando > 0); 
 
@@ -45,29 +45,33 @@ void loopConecao(int descritorCliente) {
     char msg_servidor[50];
 
     while (1) {  
-        memset(dadosCliente, 0, BUFFER_SIZE);
-        bytesLidos = lerDadosCliente(descritorCliente, dadosCliente, BUFFER_SIZE -1);
         
-        if (bytesLidos <= 0) break; 
+        if (identificar_escrita(descritorCliente) > 0) {
 
-        dadosCliente[bytesLidos] = '\0';        
+            memset(dadosCliente, 0, BUFFER_SIZE);
+            bytesLidos = lerDadosCliente(descritorCliente, dadosCliente, BUFFER_SIZE -1);
+            
+            if (bytesLidos <= 0) break; 
 
-        size_t len = strlen(dadosCliente);
+            dadosCliente[bytesLidos] = '\0';        
 
-        if (len > 0 && dadosCliente[len -1] == '\n') {
-            dadosCliente[len -1] = '\0';
-        }
-        
-        if (strcmp(dadosCliente, "!q") == 0) {
-         break;               
-        }
-        
-        printf("%s\n", dadosCliente);
+            size_t len = strlen(dadosCliente);
 
-        if (identificar_escrita()) {
+            if (len > 0 && dadosCliente[len -1] == '\n') {
+                dadosCliente[len -1] = '\0';
+            }
+            
+            if (strcmp(dadosCliente, "!q") == 0) {
+            break;               
+            }
+            printf("%s\n", dadosCliente);
+        } 
+
+        if (identificar_escrita(0)) {
             fgets(msg_servidor, sizeof(msg_servidor), stdin);
             requestSocket(descritorCliente, msg_servidor); 
         }
+
     }
 
     fecharSocket(descritorCliente); 
