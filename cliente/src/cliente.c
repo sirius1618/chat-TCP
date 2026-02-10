@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <unistd.h>
 
 #define PORT 8080
@@ -43,7 +44,7 @@ int conectar_servidor (int descritor_socket, struct sockaddr_in config_server) {
         exit(EXIT_FAILURE);
     }
 
-    printf("Conectado ao servidor");
+    printf("Conectado ao servidor\n");
     return status;
 }
 
@@ -64,9 +65,27 @@ void receber_resposta(int descritor_sock) {
     printf("%s", buffer);
 }
 
+int identificar_escrita(int sock_descritor) {
+    fd_set fila_descritores;
+
+    struct timeval tm;
+    tm.tv_sec = 1;
+    tm.tv_usec = 0;
+
+    FD_ZERO(&fila_descritores);
+
+    FD_SET(sock_descritor, &fila_descritores);
+
+    int monitorando  = select(sock_descritor + 1, &fila_descritores, NULL, NULL, &tm);
+
+    return (monitorando > 0); 
+
+}
+
 int main() {
 
     char mensagem[50]; 
+    char resposta[50]; 
 
     int descrito_sock = criar_sockt();
     struct sockaddr_in status_servidor = config_endereco_servidor(); 
@@ -77,7 +96,11 @@ int main() {
     {
         scanf("%49s", &mensagem);
         envio_mensagem(descrito_sock, mensagem);
-        receber_resposta(descrito_sock);
+
+        if (identificar_escrita(descrito_sock) > 0) {
+            receber_resposta(descrito_sock); 
+        }
+        
     }
 
 
